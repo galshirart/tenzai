@@ -593,10 +593,16 @@ for (const [key, value] of params.entries()) {
 }
 
 function nav() { 
-  hash = window.location.hash.substring(1)
+  let hash = window.location.hash.substring(1);
 
-  if (hash == '') { hash = 'home' }
-  
+  if (hash === '') { 
+    hash = 'home'; 
+  }
+
+  if (hash === 'home' && window.location.hash) {
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+  }
+
   $('.page-container').removeClass('active');
 
   setTimeout(function() {
@@ -605,7 +611,7 @@ function nav() {
   }, 400)
 
   setTimeout(function() {
-    if (hash != 'home') {
+    if (hash !== 'home') {
       $('body').addClass('inner-page');
     } else {
       $('body').removeClass('inner-page');
@@ -653,17 +659,14 @@ function apply() {
     return;
   }
 
-  // Collect form data from inputs and textareas inside .form-container
   const inputs = document.querySelectorAll('.form-container input, .form-container textarea, .form-container select');
   const data = {};
   inputs.forEach(input => {
-    // Only include inputs with a name attribute
     if (input.name) {
       data[input.name] = input.value;
     }
   });
 
-  // Send form data to Formspree
   fetch("https://formspree.io/f/xblqrqez", {
     method: "POST",
     headers: {
