@@ -1,16 +1,699 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tenzai | Your AI Hacker</title>
+<link rel="canonical" href="https://tenzai.com" />
+<link rel="shortcut icon" href="img/tenzai-favicon.svg">
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
 
+<meta property="og:title" content="Tenzai | Your AI Hacker">
+<meta property="og:description" content="Tenzai agents actively hack, exploit, and fix hardest-to-find vulnerabilities across enterprise software — at the speed of AI" />
+<meta property="og:image" content="https://galshir.com/clients/b760c3560f892523/img/tenzai-og-image.png">
+<meta property="og:url" content="https://tenzai.com">
+<meta property="og:type" content="website" />
+
+<meta name="twitter:title" content="Tenzai | Your AI Hacker">
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@tenzai" />
+<meta name="twitter:description" content="Tenzai agents actively hack, exploit, and fix hardest-to-find vulnerabilities across enterprise software — at the speed of AI" />
+<meta name="twitter:image" content="https://galshir.com/clients/b760c3560f892523/img/tenzai-og-image.png">
 <style>
+* {
+  box-sizing: border-box;
+}
 body {
-  background:black;
-  font-family: 'Inter';
+  background-color:#19191A;
+  color:white;
+  font-family: "Manrope";
+  color:white;
+  text-align: center;
+  font-weight:500;
+  font-size:14px;
+  color:rgba(255,255,255,0.9);
+  transition: background-color 1s;
+  -webkit-transition: background-color 1s;
+  will-change: background-color;
+  margin:0;
+  width:100vw;
+  height:100vh;
+}
+body.inner-page {
+  background-color:#88ffff;
+  transition: background-color 1s;
+  -webkit-transition: background-color 1s;
+  will-change: background-color;
+  color:#19191A;
+}
+a {
+  text-decoration: none;
+  color:#ffffff90;
+}
+.inner-page a {
+  color:#19191A;
+}
+.inner-page a:hover {
+  color:#19191A90;
+}
+a:hover {
+  color:white
+}
+p {
+  max-width:800px;
+}
+img {
+  display: block;
+}
+.header {
+  position: fixed;
+  left: 0;
+  top:0;
+  padding:16px;
+  width: 100%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo {
+  animation-name:logo;
+  animation-duration:2s;
+  animation-timing-function: ease-in-out;
+  overflow: hidden;
+  animation-fill-mode: both;
+  position: relative;
+}
+@keyframes logo {
+  0% { width: 48px; margin-left:100px; opacity:0 }
+  50% { width: 48px; margin-left:0; opacity:1 }
+  100% { width:192px; margin-left:0; }
+}
+.logo img.light {
+  position: absolute;
+  top:0;
+  left:0;
+  opacity:0;
+}
+.inner-page .logo img.light {
+  opacity:1;
+}
+.header-right a {
+  padding:12px;
+  animation-name:fadeIn;
+  animation-duration:1s;
+  animation-fill-mode: both;
+  animation-delay: 1s;
+}
+@keyframes fadeIn {
+  0% { opacity:0 }
+  100% { opacity:1 }
+}
+.video-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  mix-blend-mode: screen;
+  transition: all 1s linear;
+}
+.inner-page .video-container {
+  opacity:0.5;
+  mix-blend-mode: difference;
+}
+video {
+  height:800px;
+  max-height: 80vh;
+  transition: all 1s ease-in-out;
+  animation-name:fadeIn;
+  animation-duration:3s;
+  animation-fill-mode: both;
+}
+.inner-page video {
+  transform: scale(1.3);
+}
+.page-container {
+  position: absolute;
+  top: 80px;
+  left: 16px;
+  width: calc(100% - 32px);
+  height: calc(100% - 150px);
+  border-top:1px solid #00000020;
+  border-bottom:1px solid #00000020;
+  z-index: 1;
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+  pointer-events: none;
+  overflow-y:scroll;
+  text-align: left;
+  padding-top:50px;
+  padding-bottom:50px;
+  padding-left:calc(50% - 400px);
+  padding-right:calc(50% - 400px);
+}
+.page-container.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.page-container[data-page="home"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  border:0;
+}
+.page-container.center {
+  text-align: center;
+}
+.page-container[data-page="home"] > * {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+.announcement {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width:fit-content;
+  padding:6px 12px;
+  font-size:13px;
+  border-radius: 100px;
+  margin-bottom:32px;
+  backdrop-filter: blur(10px);
+  border:1px solid #ffffff20;
+  color:white;
+  background-color:#88ffff00;
+}
+.announcement:hover {
+  background-color:#88ffff10;
+  transition: background-color 0.2s ease-out;
+}
+h1, h2, h3 {
+  font-size: 88px;
+  font-weight: 800;
+  margin: 0;
+  text-transform: uppercase;
+  font-family: "Roboto Mono", monospace;
+}
+h1 {
+  word-spacing: -0.2em;
+  line-height:120%;
+}
+h2 {
+  font-size:40px;
+  font-family: "Manrope";
+  text-transform: none;
+  font-weight: 500;
+  max-width:800px;
+}
+h3 {
+  font-size:18px;
+  margin-top:32px;
+}
+p.subtitle {
+  font-size: 20px;
+  font-weight: 500;
+  max-width:760px;
+  line-height:150%;
+}
+p.big {
+  font-size:28px;
+}
+.text-block {
+  border:1px solid #88ffff30;
+  color:#88ffff;
+  box-sizing: border-box;
+  padding:16px 32px;
+  border-radius: 8px;
+  margin:32px 0;
+  background: url(img/tenzai-dither.webp?2);
+  background-size: auto 400px;
+  animation-name: background-dither;
+  animation-duration: 6s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  animation-direction: alternate;
+  position: relative;
+  overflow: hidden;
+}
+@keyframes background-dither {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 100% 0%; }
+}
+.text-block:after {
+  content: "";
+  position: absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background-color: #88ffff10;
+  mix-blend-mode: hard-light;
+}
+label {
+  font-size: 12px;
+  letter-spacing: 1px;
+  font-weight: 800;
+  max-width:800px;
+  text-transform: uppercase;
+  font-family: "Roboto Mono", monospace;
+  color:#ffffff50;
+  margin-bottom:12px;
+}
+.inner-page label {
+  color:#19191A90;
+}
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  font-weight: 700;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+  border:1px solid #ffffff30;
+  border-radius: 100px;
+  transition: all 0.2s ease-out;
+  cursor:pointer;
   color:white;
 }
-</style>
+.inner-page .button {
+  background:#19191A;
+  color:white;
+}
+.button.blue {
+  background-color:#88ffff;
+  color:black;
+  backdrop-filter: none;
+  transition: all 0.2s ease-out;
+}
+.inner-page .button {
+  background:#19191A;
+  color:white;
+}
+.inner-page .button.blue:hover {
+  background:#19191A;
+  color:white;
+}
+.button.circle {
+  padding:0;
+  width:40px;
+  height:40px;
+}
+.button img {
+  width:18px;
+}
+input, textarea {
+  display: block;
+  background:#19191A10;
+  padding:6px 12px;
+  border-radius: 6px;
+  border:1px solid #19191A30;
+  font-size:14px;
+  font-family: "Manrope";
+  margin:8px 0;
+  width:300px;
+  margin-bottom:16px;
+  color:#19191A;
+}
+::placeholder {
+  color:#19191A90;
+}
+input:focus, textarea:focus {
+  outline: none;
+  border:1px solid #19191A80;
+}
+input.error, textarea.error {
+  border:1px solid #FF426E;
+}
+.line {
+  border-bottom:1px solid #19191A;
+  margin:64px 0;
+  opacity:0.2
+}
+.background-dither {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  z-index: -2;
+  width: 100%;
+  max-width:1000px;
+  height: 100%;
+  background: url('img/tenzai-dither.webp?2') repeat;
+  background-repeat: no-repeat;
+  background-size:contain;
+  background-position: 0 100%;
+  opacity:0.5;
+  transition: opacity 0.3s ease-out;
+  mix-blend-mode: screen;;
 
-TENZAI<br>COMING SOON
+}
+.inner-page .background-dither {
+  opacity:0;
+}
+.footer {
+  position: fixed;
+  display: flex;
+  width:100%;
+  justify-content: space-between;
+  bottom: 0;
+  padding:16px;
+  text-align: left;
+  font-size:10px;
+  z-index: 2;
+}
+.footer a {
+  margin-right:8px;
+}
+@media screen and (max-width: 800px) {
+  h1 { font-size:42px;}
+  p.big { font-size:24px;}
+  p.subtitle { font-size:18px}
+}
+</style>
+</head>
+<body>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BH9DNMP46L"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-BH9DNMP46L');
+</script>
+
+<div class="cursor-gradient"></div>
+
+<div class="background-dither"></div>
+
+<div class="video-container">
+  <video autoplay loop muted playsinline src="img/tenzai-star-video.mp4"></video>
+</div>
+
+<div class="header">
+  <a class="logo" href="#home">
+    <img class="dark" src="img/tenzai-full-logo-blue-white.svg">
+    <img class="light" src="img/tenzai-full-logo-black.svg">
+  </a>
+  <div class="header-right">
+    <a href="#manifesto">Manifesto</a>
+  </div>
+</div>
+
+<div class="page-container" data-page="home">  
+  <a class="announcement" href="#">
+    Announcing $75 million in record seed round
+    <img src="img/i-arrow.svg?3" style="margin-left:4px; margin-top:1px;">
+  </a>
+  <h1>Meet Your<br> AI Hacker</h1>
+  <p class="subtitle">Tenzai agents actively hack, exploit, and fix hardest-to-find vulnerabilities across enterprise software - at the speed of AI</p>
+  <div style="margin-top:16px;"></div>
+  <a class="button blue" href="#manifesto">APPLY FOR ACCESS</a>
+</div>
+
+<div class="page-container" data-page="manifesto">  
+  <label class="blue">MANIFESTO</label>
+  <h1>Hello, world. We're Tenzai.</h1>
+  <p class="big">Hackers have always seen the world differently. Where others follow rules, they test them. They find beauty in systems, and truth in their flaws.</p>
+
+  <p class="subtitle">That curiosity, that instinct to probe, break, tinker and understand, has repeatedly made the internet a safer place for all of us over the years. Their skill is rare: the ability to find vulnerabilities where others see stability. They’re the ones who expose what is broken before anyone else can exploit it. Think of them as an immune system for software: they surface threats that the rest miss, and force the system to heal.</p>
+
+  <p class="subtitle">That’s why penetration testing became the golden standard of security. It became the backbone of trust in every enterprise: the proof that what we build can endure scrutiny.</p>
+
+  <p class="subtitle">But, mastery doesn’t scale. Scarcity of talent meant that the best hackers are rare, their craft slow, their reach limited. All the while, the systems that have to be tested grow and evolve by the hour.</p>
+
+  <p class="subtitle">Then came AI. Tireless, exacting, and unbound by human pace of learning, analyzing data and understanding context. Modern AI models are trained in all disciplines of networking, engineering, math, logic, languages and even social engineering.</p>
+
+  <p class="subtitle">For the first time, we could capture the brilliance of the minds of those rare, singular, elite hackers- and scale it infinitely.</p>
+
+  <p class="subtitle"><strong>That’s where Tenzai comes in.</strong></p>
+
+  <div class="text-block">
+    <p class="subtitle">We’re closing the scarcity gap with AI hackers that think like adversaries, act like them, and help fix what they find before the real ones do. Our agentic penetration testing platform continuously hacks, exploits, and remediates vulnerabilities across enterprise applications,relentlessly, at the speed of AI.</p>
+  </div>
+  <p class="subtitle">We spent decades in offensive cyber - building and breaking systems at the highest level, from military intelligence units to category-defining companies like Guardicore and Snyk. Now, backed by $75 million in seed funding from Greylock, Battery Ventures, Lux, Swish Ventures, and others, we’re using that experience to defend the world’s software: autonomously, continuously, and in depth.</p>
+
+  <img src="img/tenzai-backers.png" style="width:100%; max-width:400px; margin:32px 0; opacity:0.7">
+  
+  <p class="subtitle">Hackers were the first to see how fragile the digital world really is. We’ve built one that never sleeps.</p>
+
+  <p class="subtitle">AI has changed the rules. <strong>Security must change with it.</strong></p>
+  
+  <p class="subtitle">If this mission speaks to you, join us.</p>
+  
+  <p>— The Tenzai Team</p>
+
+  <div class="line"></div>
+
+  <h2>Apply for access</h2>
+  <p class="subtitle">We're currently in private beta. If you're interested in accessing Tenzai, please fill out the form below and our team will get back to you.</p>
+
+  <div class="form-container" style="margin-top:32px;"> 
+    <input type="text" name="name" data-mandatory="true" placeholder="Your name">
+    <input type="email" name="email" data-mandatory="true" placeholder="Your email address">
+    <input type="text" name="company" data-mandatory="true" placeholder="Your company">
+    <textarea name="message" placeholder="Additional information"></textarea>
+    <a class="button blue" onclick="apply()">Apply</a>
+  </div>
+</div>
+
+<div class="page-container" data-page="terms">  
+  <h2>Terms of Service</h2>
+  <label>Last updated: November 6, 2025</label>
+  <p>Welcome to <strong>Tenzai Inc.</strong> (“we,” “our,” “us”). By accessing or using our website (the “Site”), you agree to these Terms of Service (“Terms”). Please read them carefully before using our Site.</p>
+  <h3>1. Acceptance of Terms</h3>
+  <p>By using our Site, you agree to follow and be bound by these Terms and our Privacy Policy. If you do not agree, please do not use our Site.</p>
+  <h3>2. Use of the Site</h3>
+  <p>You may use our Site only for lawful purposes and in accordance with these Terms. You agree not to:</p>
+  <ul>
+    <li>Violate any applicable laws or regulations.</li>
+    <li>Attempt to interfere with or disrupt the Site's operation.</li>
+    <li>Use the Site to distribute spam, malware, or harmful content.</li>
+  </ul>
+  <p>We may suspend or terminate your access at any time if you violate these Terms.</p>
+  <h3>3. Intellectual Property</h3>
+  <p>All content on this Site—including text, images, graphics, logos, and designs—is owned by <strong>Tenzai Inc.</strong> or its licensors and is protected by copyright and trademark laws. You may not reproduce, distribute, or modify any part of the Site without our written permission.</p>
+  <h3>4. Disclaimer of Warranties</h3>
+  <p>Our Site is provided on an <strong>“as is”</strong> and <strong>“as available”</strong> basis. We make no warranties, express or implied, regarding the operation, accuracy, or reliability of the Site.</p>
+  <h3>5. Limitation of Liability</h3>
+  <p>To the fullest extent permitted by law, <strong>Tenzai Inc.</strong> and its affiliates are not liable for any indirect, incidental, or consequential damages arising out of your use of the Site.</p>
+  <h3>6. Links to Other Websites</h3>
+  <p>Our Site may contain links to third-party websites. We are not responsible for the content, policies, or practices of those sites.</p>
+  <h3>7. Changes to These Terms</h3>
+  <p>We may update these Terms from time to time. The updated version will be posted on this page with a new “last updated” date. Your continued use of the Site means you accept any changes.</p>
+  <h3>8. Governing Law</h3>
+  <p>These Terms are governed by and construed in accordance with the laws of the United States, without regard to its conflict of law principles.</p>
+  
+  <div style="margin-top:64px;"></div>
+  
+  <h2>Privacy Policy</h2>
+  <label>Last updated: November 6, 2025</label>
+  <p>Welcome to <strong>Tenzai Inc.</strong> (“we,” “our,” “us”). Your privacy matters to us. This Privacy Policy explains how we collect, use, and protect your information when you visit our website (the “Site”).</p>
+  <h3>1. Information We Collect</h3>
+  <p>We may collect the following types of information:</p>
+  <ul>
+    <li><strong>Personal Information:</strong> such as your name, email address, and other details you provide when you contact us or sign up for updates.</li>
+    <li><strong>Usage Data:</strong> including your IP address, browser type, device information, and how you interact with our Site.</li>
+    <li><strong>Cookies:</strong> small data files stored on your device to improve your browsing experience.</li>
+  </ul>
+  <h3>2. How We Use Your Information</h3>
+  <p>We use your information to:</p>
+  <ul>
+    <li>Operate, maintain, and improve our Site.</li>
+    <li>Respond to inquiries or support requests.</li>
+    <li>Send updates, newsletters, or promotional content (only if you’ve opted in).</li>
+    <li>Analyze website usage to improve performance and design.</li>
+  </ul>
+  <h3>3. Sharing Your Information</h3>
+  <p>We do <strong>not</strong> sell your personal information. We may share information only with:</p>
+  <ul>
+    <li><strong>Service Providers</strong> who help operate the Site (such as hosting or analytics services).</li>
+    <li><strong>Legal Authorities</strong> if required by law or to protect our rights and users.</li>
+  </ul>
+  <h3>4. Cookies and Tracking</h3>
+  <p>We may use cookies and similar technologies to improve user experience and analyze traffic. You can manage or disable cookies through your browser settings, though some parts of the Site may not function properly without them.</p>
+  <h3>5. Data Security</h3>
+  <p>We take reasonable measures to protect your data from unauthorized access, loss, or misuse. However, no method of online transmission or storage is completely secure, and we cannot guarantee absolute security.</p>
+  <h3>6. Your Rights</h3>
+  <p>Depending on your location, you may have the right to:</p>
+  <ul>
+    <li>Access or request a copy of your personal data.</li>
+    <li>Request correction or deletion of your data.</li>
+    <li>Withdraw consent for certain data uses.</li>
+  </ul>
+  <p>To exercise these rights, please contact us at [Insert Email].</p>
+  <h3>7. Third-Party Links</h3>
+  <p>Our Site may link to other websites. We are not responsible for the privacy practices or content of those external sites.</p>
+  <h3>8. Children's Privacy</h3>
+  <p>Our Site is not directed toward children under 13, and we do not knowingly collect personal data from them.</p>
+  <h3>9. Changes to This Policy</h3>
+  <p>We may update this Privacy Policy from time to time. Any changes will be posted here with a new “last updated” date.</p>
+  
+  <div style="margin-top:64px;"></div>
+
+  <h2>Contact Us</h2>
+  <p>If you have any questions about these Terms, please contact us at: team@tenzai.com</p>
+  <p><strong>Tenzai Inc.</strong><br>
+</div>
+
+<div class="footer"> 
+  <div class="footer-left">
+    <a href="#terms">Terms and Privacy</a>
+    <div style="margin-top:6px;"></div>
+    <div>© 2025 TENZAI INC.</div>
+  </div>
+
+  <div class="footer-right">
+    <a class="button circle" href="https://x.com/tenzai"><img src="img/i-linkedin.png"></a>
+    <span style="margin-left:4px;"></span>
+    <a class="button circle" href="https://x.com/tenzai"><img src="img/i-twitter.png?2"></a>
+  </div>
+
+</div>
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+  const elements = document.querySelectorAll('.page-container[data-page="home"] > *');
+  elements.forEach((el, i) => {
+    setTimeout(() => {
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    }, 200 + i * 200);
+  });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  nav()
+  $(window).on('hashchange', function() {
+    nav()
+  });
+});
+
+const params = new URLSearchParams(window.location.search);
+for (const [key, value] of params.entries()) {
+  if (value) {
+    location.replace(location.origin + "/#" + value);
+    break;
+  }
+}
+
+function nav() { 
+  hash = window.location.hash.substring(1)
+
+  if (hash == '') { hash = 'home' }
+  
+  $('.page-container').removeClass('active');
+
+  setTimeout(function() {
+    $('.page-container[data-page="'+hash+'"]').addClass('active');
+    window.dispatchEvent(new Event('resize'));
+  }, 400)
+
+  setTimeout(function() {
+    if (hash != 'home') {
+      $('body').addClass('inner-page');
+    } else {
+      $('body').removeClass('inner-page');
+    }
+  }, 100);
+
+}
+
+function apply() {
+  const mandatoryFields = document.querySelectorAll('[data-mandatory="true"]');
+  let isValid = true;
+  let emailError = false;
+
+  mandatoryFields.forEach(field => {
+    if ((field.value || '').trim() === '') {
+      field.classList.add('error');
+      isValid = false;
+    } else {
+      field.classList.remove('error');
+      if (
+        (field.getAttribute('type') === 'email' ||
+          field.getAttribute('name') === 'email' ||
+          field.id === 'email') &&
+        field.value.trim() !== ''
+      ) {
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(field.value.trim())) {
+          field.classList.add('error');
+          emailError = true;
+          isValid = false;
+        } else {
+          field.classList.remove('error');
+        }
+      }
+    }
+  });
+
+  if (!isValid) {
+    if (emailError) {
+      alert('Please enter a valid email address');
+    } else {
+      alert('Please fill in all mandatory fields');
+    }
+    return;
+  }
+
+  // Collect form data from inputs and textareas inside .form-container
+  const inputs = document.querySelectorAll('.form-container input, .form-container textarea, .form-container select');
+  const data = {};
+  inputs.forEach(input => {
+    // Only include inputs with a name attribute
+    if (input.name) {
+      data[input.name] = input.value;
+    }
+  });
+
+  // Send form data to Formspree
+  fetch("https://formspree.io/f/xblqrqez", {
+    method: "POST",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => {
+    if (!response.ok) {
+      return response.json().then(data => {
+        throw new Error(data.error || "Submission failed");
+      });
+    }
+    return response.json();
+  })
+  .then(data => {
+    $('.form-container').html('Application submitted successfully.');
+  })
+  .catch(error => {
+    alert(error.message);
+  });
+ 
+}
+
 
 </script>
+
+
+</body>
+</html>
