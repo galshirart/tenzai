@@ -7,7 +7,7 @@
 <link rel="canonical" href="https://tenzai.com" />
 <link rel="shortcut icon" href="img/tenzai-favicon.svg">
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
@@ -466,10 +466,10 @@ input.error, textarea.error {
   <p class="subtitle">We're currently in private beta. If you're interested in accessing Tenzai, please fill out the form below and our team will get back to you.</p>
 
   <div class="form-container" id="form"style="margin-top:32px;"> 
-    <input type="text" name="name" data-mandatory="true" placeholder="Your name">
-    <input type="email" name="email" data-mandatory="true" placeholder="Your email address">
-    <input type="text" name="company" data-mandatory="true" placeholder="Your company">
-    <textarea name="message" placeholder="Additional information"></textarea>
+    <input type="text" name="name" data-mandatory="true" placeholder="Your name" maxlength="100">
+    <input type="email" name="email" data-mandatory="true" placeholder="Your email address" maxlength="254">
+    <input type="text" name="company" data-mandatory="true" placeholder="Your company" maxlength="200">
+    <textarea name="message" placeholder="Additional information" maxlength="2000"></textarea>
     <a class="button blue" onclick="apply()">Apply</a>
   </div>
 </div>
@@ -561,9 +561,9 @@ input.error, textarea.error {
   </div>
 
   <div class="footer-right">
-    <a class="button circle" target="_blank" href="https://www.linkedin.com/company/tenzai-inc"><img src="img/i-linkedin.png"></a>
+    <a class="button circle" target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/company/tenzai-inc"><img src="img/i-linkedin.png"></a>
     <span style="margin-left:4px;"></span>
-    <a class="button circle" target="_blank" href="https://x.com/Tenzai_Labs"><img src="img/i-twitter.png?2"></a>
+    <a class="button circle" target="_blank" rel="noopener noreferrer" href="https://x.com/Tenzai_Labs"><img src="img/i-twitter.png?2"></a>
   </div>
 
 </div>
@@ -587,18 +587,24 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 const params = new URLSearchParams(window.location.search);
+const allowedQueryPages = new Set(['home', 'terms', 'manifesto']);
 for (const [key, value] of params.entries()) {
-  if (value) {
+  if (value && allowedQueryPages.has(value)) {
     location.replace(location.origin + "/#" + value);
     break;
   }
 }
 
 function nav() { 
+  const allowedPages = new Set(['home', 'terms', 'manifesto']);
   let hash = window.location.hash.substring(1);
 
   if (hash === '') { 
     hash = 'home'; 
+  }
+
+  if (!allowedPages.has(hash)) {
+    hash = 'home';
   }
 
   if (hash === 'home' && window.location.hash) {
@@ -608,7 +614,8 @@ function nav() {
   $('.page-container').removeClass('active');
 
   setTimeout(function() {
-    $('.page-container[data-page="'+hash+'"]').addClass('active');
+    const escapedHash = CSS.escape(hash);
+    $('.page-container[data-page="'+escapedHash+'"]').addClass('active');
     window.dispatchEvent(new Event('resize'));
   }, 400)
 
@@ -693,7 +700,7 @@ function apply() {
     return response.json();
   })
   .then(data => {
-    $('.form-container').html('Application submitted successfully.');
+    $('.form-container').text('Application submitted successfully.');
   })
   .catch(error => {
     alert(error.message);
