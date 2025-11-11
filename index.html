@@ -424,7 +424,7 @@ input.error, textarea.error {
   <h1>Meet Your<br> AI Hacker</h1>
   <p class="subtitle">Tenzai agents actively hack, exploit, and fix hardest-to-find vulnerabilities across enterprise software - at the speed of AI</p>
   <div style="margin-top:16px;"></div>
-  <a class="button blue" href="#manifesto">APPLY FOR ACCESS</a>
+  <a class="button blue" href="#manifesto" onclick="scrollToForm()">APPLY FOR ACCESS</a>
 </div>
 
 <div class="page-container" data-page="manifesto">  
@@ -464,7 +464,7 @@ input.error, textarea.error {
   <h2>Apply for access</h2>
   <p class="subtitle">We're currently in private beta. If you're interested in accessing Tenzai, please fill out the form below and our team will get back to you.</p>
 
-  <div class="form-container" style="margin-top:32px;"> 
+  <div class="form-container" id="form"style="margin-top:32px;"> 
     <input type="text" name="name" data-mandatory="true" placeholder="Your name">
     <input type="email" name="email" data-mandatory="true" placeholder="Your email address">
     <input type="text" name="company" data-mandatory="true" placeholder="Your company">
@@ -619,6 +619,13 @@ function nav() {
     }
   }, 100);
 
+}
+
+function scrollToForm() {
+  const form = document.getElementById('form');
+  setTimeout(() => {
+    form.scrollIntoView({ behavior: 'smooth' });
+  }, 500);
 }
 
 function apply() {
