@@ -733,19 +733,30 @@ function apply() {
 
 
 function sendHiringRequest() {
-  const mandatoryFields = document.querySelectorAll('.hiring-form [data-mandatory="true"]');
+  // Make sure to select only from the hiring-form with correct selector
+  const hiringForm = document.getElementById('hiring-form') || document.querySelector('.hiring-form, #hiring-form');
+  if (!hiringForm) {
+    alert('Form container not found');
+    return;
+  }
+
+  // Select mandatory fields only within the current form context
+  const mandatoryFields = hiringForm.querySelectorAll('[data-mandatory="true"]');
   let isValid = true;
   let emailError = false;
 
+  // Debugging: log values of all mandatory fields to check if they're really empty
   mandatoryFields.forEach(field => {
+    // For debugging potential whitespace issues, show the trimmed value
+    // console.log('Field', field.name, 'value:', JSON.stringify(field.value), 'trimmed:', JSON.stringify((field.value || '').trim()));
     if ((field.value || '').trim() === '') {
       field.classList.add('error');
       isValid = false;
     } else {
       field.classList.remove('error');
       if (
-        (field.getAttribute('type') === 'email' ||
-          field.getAttribute('name') === 'email' ||
+        (field.type === 'email' ||
+          field.name === 'email' ||
           field.id === 'email') &&
         field.value.trim() !== ''
       ) {
@@ -771,13 +782,17 @@ function sendHiringRequest() {
     return;
   }
 
-  const inputs = document.querySelectorAll('.hiring-form input, .hiring-form textarea, .hiring-form select');
+  // Collect data from inputs within this specific form only
+  const inputs = hiringForm.querySelectorAll('input, textarea, select');
   const data = {};
   inputs.forEach(input => {
     if (input.name) {
       data[input.name] = input.value;
     }
   });
+
+  // Optional: log data for debugging purposes
+  // console.log('Sending data:', data);
 
   fetch("https://formspree.io/f/xblqrqez", {
     method: "POST",
@@ -796,12 +811,12 @@ function sendHiringRequest() {
     return response.json();
   })
   .then(data => {
-    $('.form-container').text('Form submitted successfully! Our team will get back to you soon.');
+    // Directly change only the hiring form container content
+    $(hiringForm).text('Form submitted successfully! Our team will get back to you soon.');
   })
   .catch(error => {
     alert(error.message);
   });
- 
 }
 
 </script>
