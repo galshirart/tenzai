@@ -422,6 +422,7 @@ input.error, textarea.error {
   </a>
   <div class="header-right">
     <a href="#manifesto">Manifesto</a>
+    <a href="#joinus">Join us</a>
   </div>
 </div>
 
@@ -471,12 +472,28 @@ input.error, textarea.error {
   <h2>Apply for access</h2>
   <p class="subtitle">We're currently in private beta. If you're interested in accessing Tenzai, please fill out the form below and our team will get back to you.</p>
 
-  <div class="form-container" id="form"style="margin-top:32px;"> 
+  <div class="form-container" id="access-form" style="margin-top:32px;"> 
     <input type="text" name="name" data-mandatory="true" placeholder="Your name" maxlength="100">
     <input type="email" name="email" data-mandatory="true" placeholder="Your email address" maxlength="254">
     <input type="text" name="company" data-mandatory="true" placeholder="Your company" maxlength="200">
     <textarea name="message" placeholder="Additional information" maxlength="2000"></textarea>
     <div class="button blue" onclick="apply()">Apply</div>
+  </div>
+</div>
+
+<div class="page-container" data-page="joinus">  
+  <label style="margin-left:6px">WE'RE HIRING</label>
+  <h1>Join Tenzai</h1>
+  <p class="subtitle">
+    We're looking for talented individuals to join our team. If you're interested in what we do, please fill out the form below and our team will get back to you.
+  </p>
+
+  <div class="form-container" id="hiring-form" style="margin-top:32px;"> 
+    <input type="text" name="name" data-mandatory="true" placeholder="Your name" maxlength="100">
+    <input type="email" name="email" data-mandatory="true" placeholder="Your email address" maxlength="254">
+    <input type="text" name="linkedin" placeholder="LinkedIn profile" maxlength="200">
+    <textarea name="message" placeholder="Additional information" maxlength="2000"></textarea>
+    <div class="button blue" onclick="sendHiringRequest()">Send</div>
   </div>
 </div>
 
@@ -602,7 +619,7 @@ for (const [key, value] of params.entries()) {
 }
 
 function nav() { 
-  const allowedPages = new Set(['home', 'terms', 'manifesto']);
+  const allowedPages = new Set(['home', 'terms', 'manifesto', 'joinus']);
   let hash = window.location.hash.substring(1);
 
   if (hash === '') { 
@@ -643,7 +660,7 @@ function scrollToForm() {
 }
 
 function apply() {
-  const mandatoryFields = document.querySelectorAll('[data-mandatory="true"]');
+  const mandatoryFields = document.querySelectorAll('.access-form [data-mandatory="true"]');
   let isValid = true;
   let emailError = false;
 
@@ -681,7 +698,7 @@ function apply() {
     return;
   }
 
-  const inputs = document.querySelectorAll('.form-container input, .form-container textarea, .form-container select');
+  const inputs = document.querySelectorAll('.access-form input, .access-form textarea, .access-form select');
   const data = {};
   inputs.forEach(input => {
     if (input.name) {
@@ -706,7 +723,7 @@ function apply() {
     return response.json();
   })
   .then(data => {
-    $('.form-container').text('Application submitted successfully.');
+    $('.form-container').text('Form submitted successfully! Our team will get back to you soon.');
   })
   .catch(error => {
     alert(error.message);
@@ -714,6 +731,78 @@ function apply() {
  
 }
 
+
+function sendHiringRequest() {
+  const mandatoryFields = document.querySelectorAll('.hiring-form [data-mandatory="true"]');
+  let isValid = true;
+  let emailError = false;
+
+  mandatoryFields.forEach(field => {
+    if ((field.value || '').trim() === '') {
+      field.classList.add('error');
+      isValid = false;
+    } else {
+      field.classList.remove('error');
+      if (
+        (field.getAttribute('type') === 'email' ||
+          field.getAttribute('name') === 'email' ||
+          field.id === 'email') &&
+        field.value.trim() !== ''
+      ) {
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(field.value.trim())) {
+          field.classList.add('error');
+          emailError = true;
+          isValid = false;
+        } else {
+          field.classList.remove('error');
+        }
+      }
+    }
+  });
+
+  if (!isValid) {
+    if (emailError) {
+      alert('Please enter a valid email address');
+    } else {
+      alert('Please fill in all mandatory fields');
+    }
+    return;
+  }
+
+  const inputs = document.querySelectorAll('.hiring-form input, .hiring-form textarea, .hiring-form select');
+  const data = {};
+  inputs.forEach(input => {
+    if (input.name) {
+      data[input.name] = input.value;
+    }
+  });
+
+  fetch("https://formspree.io/f/xblqrqez", {
+    method: "POST",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => {
+    if (!response.ok) {
+      return response.json().then(data => {
+        throw new Error(data.error || "Submission failed");
+      });
+    }
+    return response.json();
+  })
+  .then(data => {
+    $('.form-container').text('Form submitted successfully! Our team will get back to you soon.');
+  })
+  .catch(error => {
+    alert(error.message);
+  });
+ 
+}
 
 </script>
 
